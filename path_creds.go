@@ -53,17 +53,17 @@ func (b *backend) pathCredsRead(ctx context.Context, req *logical.Request, data 
 	// Getting config to embed "host" in the response
 	configEntry, err := req.Storage.Get(ctx, configPath)
 	if err != nil {
-		return logical.ErrorResponse("influxdb config is missing (get): %s", name), nil
+		return logical.ErrorResponse("influxdb config is missing (get): %s", err), nil
 	}
 	if configEntry == nil {
-		return logical.ErrorResponse("influxdb config is missing (nil response): %s", name), nil
+		return logical.ErrorResponse("influxdb config is missing (nil response): %s", err), nil
 	}
 	config := &config{}
 	if err := configEntry.DecodeJSON(config); err != nil {
-		return logical.ErrorResponse("influxdb config is missing (decode json): %s", name), nil
+		return logical.ErrorResponse("influxdb config is missing (decode json): %s", err), nil
 	}
 	if config == nil {
-		return logical.ErrorResponse("influxdb config is missing (decoded json is nil): %s", name), nil
+		return logical.ErrorResponse("influxdb config is missing (decoded json is nil): %s", err), nil
 	}
 	token := ""
 

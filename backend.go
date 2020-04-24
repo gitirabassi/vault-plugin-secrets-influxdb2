@@ -35,7 +35,7 @@ func Backend() *backend {
 		Paths: framework.PathAppend(
 			b.pathRoles(),
 			b.pathCreds(),
-			// b.pathRotateCredentials(),
+			b.pathRotateRoot(),
 			b.pathConfig(),
 		),
 		Secrets:     []*framework.Secret{},
