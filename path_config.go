@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/vault/sdk/framework"
 	"github.com/hashicorp/vault/sdk/logical"
+	influxdb2 "github.com/influxdata/influxdb-client-go"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -84,6 +85,17 @@ func (b *backend) configCreateUpdateOperation(ctx context.Context, req *logical.
 	orgID := fieldData.Get("org_id").(string)
 	if orgID != "" && initialize {
 		return nil, errors.New("org_id cannot be configured when `initialize` is true")
+	}
+
+	client := influxdb2.NewClient(host, token)
+	ok, err := client.Ready(context.Background())
+
+	if err != nil {
+		return nil, errors.New("Cannot contact influxdb server: " + err.Error())
+	}
+
+	if !ok {
+		return nil, errors.New("Influxdb server not Ready: " + err.Error())
 	}
 
 	config := &config{
